@@ -1,0 +1,62 @@
+<div class="main-container" id="container">
+    <form action="/products" class="btn-ptr btn-volver">
+        <input type="submit" value="VOLVER A PRODUCTOS">
+    </form>
+    <div class="tabla">
+        <div class="titulos">
+            <h1 id="title-cart" cartId={{data._id}}>CARRITO N° {{data._id}}</h1>
+            <ul class="cart">
+                <li></li>
+                <li class="li-titles">Code</li>
+                <li class="li-titles">Nombre</li>
+                <li class="li-description li-titles">Descripcion</li>
+                <li class="li-price li-titles">Precio</li>
+                <li class="li-titles">Stock</li>
+                <li class="li-titles">Categoria</li>
+                <li class="li-titles">Cantidad</li>
+            </ul>
+        </div>
+        <div id="form-real-time">
+            {{#if data.status}}
+            {{#each data.products}}
+            <ul class="cart" data-id={{this.product._id}}>
+                <button class="btn-delete" id="btn-delete">❌</button>
+                <li class="idTitle">{{this.product.code}}</li>
+                <li><strong>{{this.product.title}}</strong></li>
+                <li class="li-description">"{{this.product.description}}"</li>
+                <li class="li-price">$ {{this.product.price}} </li>
+                <li>{{this.product.stock}}</li>
+                <li>{{this.product.category}}</li>
+                <div class="btn-quantity">
+                    <button class="btn-decrease" id="btn-decrease"><img src="../../img/rest-icon.png" width="25px"
+                            alt=""></button>
+                    <button class="elem-quantity" id="elem-quantity" data-id={{this.product._id}}> {{this.quantity}}
+                    </button>
+                    <button class="btn-increase" id="btn-increase"><img src="../../img/add-icon.png" width="25px"
+                            alt=""></button>
+                </div>
+
+            </ul>
+            {{/each}}
+            {{else}}
+            <div class="notItems-container">
+                <p class="notItems">No hay productos :(</p>
+            </div>
+            {{/if}}
+
+
+        </div>
+
+        <div class="total-container" id="total-cart">
+            <h2> TOTAL: $ </h2>
+        </div>
+
+    </div>
+
+    <form action="/tickets" class="btn-ptr btn-volver">
+        <input type="submit" value="VER TICKETS">
+    </form>
+
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/cart.js"></script>

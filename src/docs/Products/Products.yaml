@@ -1,0 +1,198 @@
+paths:  
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Product"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    post:
+      summary: Agregar un producto
+      tags:
+        - Products
+      responses:
+        "200":
+          description: El producto fue agregado satisfactoriamente a la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "401":
+          description: Error al agregar el producto, no debe de incluir un ID ya que este se autogenera por si mismo
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un solo producto a partir de su CODE
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: CODE del producto que se desea solicitar
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: El producto fue obtenido satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "404":
+          description: Error al obtener el producto. No se encontro el mismo en la base de datos, verificar el PID (code)
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    put:
+      summary: Actualiza un solo producto a partir de su CODE
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: CODE del producto que se desea actualizar
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: El producto fue actualizado satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "404":
+          description: Error al actualizar el producto. No se encontro el mismo en la base de datos, verificar el PID (code)
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+    delete:
+      summary: Elimina un solo producto a partir de su CODE
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: CODE del producto que se desea eliminar
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: El producto fue eliminado satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "404":
+          description: Error al eliminar el producto. No se encontro el mismo en la base de datos, verificar el PID (code)
+        "401":
+          description: Error al eliminar el producto. No tienes permisos para eliminar ese producto, no eres el dueño.
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    
+components:
+  schemas:
+    Product:
+      type: object
+      properties: 
+        _id:
+          type: ObjectId
+          description: Id autogenerado por mongo
+        title:
+          type: String
+          description: Titulo del producto 
+        description:
+          type: String
+          description:  Descripcion del producto
+        code:
+          type: String
+          description: Codigo identificador del producto
+        price:
+          type: Number
+          description: Precio del producto
+        stock:
+          type: Number
+          description: Stock inicial del producto
+        category:
+          type: String
+          description: Categoria a la que pertenece el producto
+        thumbnails:
+          type: String
+          description: URL imagen del producto
+        status:
+          type: Boolean
+          description: Estado del producto (true - false)
+        owner:
+          type: String
+          description: Dueño del creador del producto (email)
+      example: 
+        _id: ObjectId("621b8v323f3a4v3ve6dc697e")
+        title: Manzana
+        description: Manzana roja
+        code: abc123
+        price: 200
+        stock: 50
+        category: Frutas
+        thumbnails: URL
+        status: true
+        owner: "usuario@gmail.com"
+
+  requestBodies:
+    updateProduct:
+      type: object
+      properties: 
+        title:
+          type: String
+          description: Titulo del producto 
+        description:
+          type: String
+          description:  Descripcion del producto
+        code:
+          type: String
+          description: Codigo identificador del producto (Unico)
+        price:
+          type: Number
+          description: Precio del producto
+        stock:
+          type: Number
+          description: Stock inicial del producto
+        category:
+          type: String
+          description: Categoria a la que pertenece el producto
+        thumbnails:
+          type: String
+          description: URL imagen del producto
+        status:
+          type: Boolean
+          description: Estado del producto (true - false)
+      example: 
+        title: Manzana
+        description: Manzana roja
+        code: abc123
+        price: 200
+        stock: 50
+        category: Frutas
+        thumbnails: URL
+        status: true

@@ -1,0 +1,49 @@
+<div class="main-container">
+    <div class="tabla">
+        <div class="titulos">
+            <h1>PRODUCTOS SOCKET.IO</h1>
+            <ul class="ul-dos">
+                <li>Code</li>
+                <li>Nombre</li>
+                <li>Descripcion</li>
+                <li>Precio</li>
+                <li>Stock</li>
+                <li>Categoria</li>
+
+            </ul>
+        </div>
+        <div id="form-real-time"></div>
+    </div>
+    <div class="container-actions">
+        <div class="container-actions-add">
+            <div class="title_add">
+                <h2>AGREGAR</h2>
+            </div>
+            <div class="inputs">
+                <input placeholder="Nombre" type="text" id="producto_title">
+                <input placeholder="Descripcion" type="text" id="producto_description">
+                <input placeholder="Codigo" type="text" id="producto_code">
+                <input placeholder="Precio" type="number" id="producto_price">
+                <input placeholder="Stock" type="number" id="producto_stock">
+                <input placeholder="Categoria" type="text" id="producto_category">
+                <button class="btn_add" type="submit" id="boton">CARGAR PRODUCTO</button>
+            </div>
+            <div id="action_add"></div>
+        </div>
+        <div class="container-actions-delete">
+            <div class="title_delete">
+                <h2>ELIMINAR</h2>
+            </div>
+
+            <div class="inputs">
+                <input placeholder="Id a eliminar" type="text" id="id_eliminar">
+                <button class="btn_delete" type="submit" id="btn_eliminar">ELIMINAR PRODUCTO</button>
+            </div>
+            <div id="action_delete"></div>
+
+        </div>
+    </div>
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/productsRealTime.js"></script>

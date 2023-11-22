@@ -1,0 +1,49 @@
+<div class="main-container" id="container">
+    <form action="/products" class="btn-ptr btn-volver">
+        <input type="submit" value="VOLVER A PRODUCTOS">
+    </form>
+
+    <div class="tabla">
+        <div class="titulos">
+            <h1 id="manager-cart">USUARIOS</h1>
+
+            <ul class="cartUser">
+                <li class="li-titles">Nombre</li>
+                <li class="li-titles">Apellido</li>
+                <li class="li-titles">Email</li>
+                <li class="li-titles">Rol</li>
+                <li class="li-titles">Cambiar</li>
+                <li class="li-titles">Eliminar</li>
+            </ul>
+
+        </div>
+
+        {{#each data}}
+        <div id="form-real-time">
+            <ul class="cartUser" data-email={{this.email}}>
+                <li class="li-titles">{{this.firstName}}</li>
+                <li class="li-titles">{{this.lastName}}</li>
+                <li class="profile-role"><strong>{{this.email}}</strong></li>
+                <li class="profile-role"><strong>{{this.role}}</strong></li>
+                <li class="li-options">
+
+                    <select name="roles" id="roles" class="roles-options">
+                        <option value="user">User</option>
+                        <option value="user_premium">User Premium</option>
+                    </select>
+
+                    <button class="btn-changeRole">🔄️</button>
+
+                </li>
+                <li class="btn-delete">❌</li>
+            </ul>
+
+        </div>
+        {{/each}}
+    </div>
+    <form class="btn-ptr btn-volver " id="btn-deleteInactiveUsers">
+        <input class="btn-inactiveUser" value="ELIMINAR USUARIOS INACTIVOS (2 DIAS)">
+    </form>
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/js/userManager.js"></script>

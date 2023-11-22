@@ -1,0 +1,141 @@
+<div class="main-container">
+    <div class="tabla profile-container">
+        <div class="titulos">
+            <div class="container-cart">
+                <h2>PERFIL</h2>
+            </div>
+
+            {{#if data.payload.isAdmin}}
+            <ul class="ul-profile-2">
+                <li class="li-titles">Rol</li>
+                <li class="li-titles">Email</li>
+            </ul>
+            {{else}}
+            <ul class="ul-profile">
+                <li class="li-titles">Rol</li>
+                <li class="li-titles">Nombre</li>
+                <li class="li-titles">Apellido</li>
+                <li class="li-titles">Email</li>
+                <li class="li-titles">Edad</li>
+            </ul>
+            {{/if}}
+
+        </div>
+
+        <div id="form-user">
+            {{#if data.payload.isAdmin}}
+            <ul class="ul-profile-2" id="ul-profile" data-welcome={{data.payload.user.role}}
+                data-admin={{data.payload.isAdmin}}>
+                <li class="profile-role">"{{data.payload.user.role}}"</li>
+                <li><strong>{{data.payload.user.email}}</strong></li>
+                <button class="btn-logout" id="btn-logout">SALIR</button>
+            </ul>
+            {{else}}
+            <ul class="ul-profile" id="ul-profile" data-welcome={{data.payload.user.firstName}}
+                data-admin={{data.payload.isAdmin}}>
+                <li class="profile-role">"{{data.payload.user.role}}"</li>
+                <li>{{data.payload.user.firstName}}</li>
+                <li>{{data.payload.user.lastName}}</li>
+                <li><strong>{{data.payload.user.email}}</strong></li>
+                <li>{{data.payload.user.age}}</li>
+                <button class="btn-logout" id="btn-logout">SALIR</button>
+            </ul>
+            {{/if}}
+        </div>
+
+    </div>
+    {{#if data.payload.isAdmin}}
+    <form action="/usersManager" class="btn-ptr btn-role" id="btn-role" data-uid={{data.payload.user._id}}>
+        <input type="submit" value="ADMINISTRAR USUARIOS">
+    </form>
+    {{/if}}
+
+    <div class="tabla">
+        <div class="titulos">
+            <div class="container-cart" id="container-cart">
+                <h1>LISTA DE PRODUCTOS</h1>
+                <a href="" class="btn-cart" id="btn-cart">
+                    <div>🛒</div>
+                </a>
+            </div>
+            <ul>
+                <li class="li-titles">Code</li>
+                <li class="li-titles">Nombre</li>
+                <li class="li-description li-titles">Descripcion</li>
+                <li class="li-price li-titles">Precio</li>
+                <li class="li-titles">Stock</li>
+                <li class="li-titles">Categoria</li>
+                <li class="li-titles">Dueño</li>
+                <li class="li-titles">Agregar</li>
+
+            </ul>
+        </div>
+        <div id="form-real-time">
+            {{#each data.payload.product}}
+            <ul class="producto" data-id={{this._id}}>
+                <li class="idTitle">{{this.code}}</li>
+                <li><strong>{{this.title}}</strong></li>
+                <li class="li-description">"{{this.description}}"</li>
+                <li class="li-price">$ {{this.price}} </li>
+                <li>{{this.stock}}</li>
+                <li>{{this.category}}</li>
+                <li>{{this.owner}}</li>
+                <button class="btn-addToCart" id="btn-addToCart"><img src="img/add-icon.png" width="25px"
+                        alt=""></button>
+            </ul>
+            {{/each}}
+        </div>
+        <div class="container-btn-pages">
+
+            {{#if data.hasPrevPage}}
+            <a class="btn-pages" href={{data.prevLink}}>PREV</a>
+            {{else}}
+            <a class="btn-pages-none">PREV</a>
+            {{/if}}
+
+            <p>{{data.page}}</p>
+            {{#if data.hasNextPage}}
+            <a class="btn-pages" href={{data.nextLink}}>NEXT</a>
+            {{else}}
+            <a class="btn-pages-none">NEXT</a>
+            {{/if}}
+
+        </div>
+    </div>
+
+    {{#if data.payload.hadPermissions }}
+    <div class="container-actions" id="actions">
+        <div class="container-actions-add">
+            <div class="title_add">
+                <h2>AGREGAR</h2>
+            </div>
+            <div class="inputs">
+                <input placeholder="Nombre" type="text" id="product_title">
+                <input placeholder="Descripcion" type="text" id="product_description">
+                <input placeholder="Codigo" type="text" id="product_code">
+                <input placeholder="Precio" type="number" id="product_price">
+                <input placeholder="Stock" type="number" id="product_stock">
+                <input placeholder="Categoria" type="text" id="product_category">
+                <button class="btn_add" type="submit" id="btn-add">CARGAR PRODUCTO</button>
+            </div>
+            <div id="action_add"></div>
+        </div>
+        <div class="container-actions-delete">
+            <div class="title_delete">
+                <h2>ELIMINAR</h2>
+            </div>
+
+            <div class="inputs">
+                <input placeholder="Id a eliminar" type="text" id="id_eliminar">
+                <button class="btn_delete" type="submit" id="btn-delete">ELIMINAR PRODUCTO</button>
+            </div>
+            <div id="action_delete"></div>
+
+        </div>
+    </div>
+    {{/if}}
+
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/products.js"></script>

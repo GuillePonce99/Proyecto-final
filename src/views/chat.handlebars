@@ -1,0 +1,22 @@
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="avatar"></div>
+        {{#if user.admin}}
+        <p id="user-title">Admin</p>
+        {{else}}
+        <p id="user-title">{{user.firstName}}</p>
+        {{/if}}
+    </div>
+
+    <div id="chat"></div>
+
+    <div class="input-container">
+        <input type="text" class="message-input" placeholder="Escribe tu mensaje..." id="chat-box">
+        <button class="send-button" id="btn-send">&#10148;</button>
+    </div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/chat.js"></script>

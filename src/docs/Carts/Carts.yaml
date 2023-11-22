@@ -1,0 +1,191 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos lo carritos
+      tags:
+      - Carts
+      responses:
+        "200":
+          description: Los carritos fueron obtenidos satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Cart"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    post:
+      summary: Crea un carrito nuevo
+      tags:
+      - Carts
+      responses:
+        "200":
+          description: Se ha creado un carrito nuevo satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un solo carrito a partir de su Id
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito que se desea solicitar
+        schema:
+          $type: String
+      responses:
+        "200":
+          description:  El carrito fue obtenido satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error al obtener el carrito. No se encontro el mismo en la base de datos, verificar el CID
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    delete:
+      summary: Elimina un solo carrito a partir de su Id
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito que se desea eliminar de la base de datos
+        schema:
+          $type: String
+      responses:
+        "200":
+          description:  El carrito fue eliminado satisfactoriamente de la base de datos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error al eliminar el carrito. No se encontro el mismo en la base de datos, verificar el CID
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Agrega un producto a un carrito
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito al que deseas agregar el producto
+        schema:
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que desea agregar el carrito
+        schema:
+          $type: String
+      responses:
+        "200":
+          description:  El producto fue agregado al carrito satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error al agregar un producto al carrito. No se encontro el mismo en la base de datos, verificar el CID (id carrito) y/o el PID (id producto)
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+    delete:
+      summary: Eliminar un producto de un carrito
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito del que desea eliminar el producto
+        schema:
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: Id del producto que desea eliminar del carrito
+        schema:
+          $type: String
+      responses:
+        "200":
+          description:  El producto fue eliminado del carrito satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error al eliminar un producto del carrito. No se encontro el mismo en la base de datos, verificar el CID (id carrito) y/o el PID (id producto)
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+  /api/carts/{cid}/products:
+    delete:
+      summary: Eliminar todos los productos de un carrito
+      tags:
+      - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: Id del carrito del que desea eliminar todos los productos
+        schema:
+          $type: String
+      responses:
+        "200":
+          description:  Los productos fueron eliminados del carrito satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error al eliminar todos los productos del carrito. No se encontro el mismo en la base de datos, verificar el CID (id carrito)
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo de conexion con la base de datos
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por mongo
+        products:
+          type: array
+          description: Array de productos agregados
+          items:
+            $ref: "#components/schemas/ObjectCart"
+      exmaple:
+        _id: ObjectId("64dd779acfd3bcf287cc40cf")
+        products: 
+    ObjectCart:
+      type: object
+      description: Objeto de cada producto agregado en el carrito
+      properties:
+        product:
+          type: ObjectId
+          description: Id del producto agregado
+        quantity:
+          type: Number
+          description: Cantidad agregada del mismo producto
+        _id:
+          type: ObjectId
+          description: Id de cada objeto del producto
+      example:
+          product: ObjectId("64dd779acfd3bcf287cc40cf")
+          quantity: 35
+          _id: ObjectId("64dd779acfd3bcf287cc50cf")
+            
+        
