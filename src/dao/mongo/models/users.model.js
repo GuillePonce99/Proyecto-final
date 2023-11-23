@@ -32,9 +32,11 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: "user"
+    },
+    last_connection: {
+        type: Date,
+        default: Date.now
     }
-}, {
-    timestamps: true
 })
 
 userSchema.pre("findOne", function () {

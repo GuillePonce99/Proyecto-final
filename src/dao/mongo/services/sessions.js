@@ -59,6 +59,8 @@ export default class Sessions {
           return res.status(401).json({ message: "Contraseña incorrecta!" })
         }
 
+        await UserModel.findOneAndUpdate({ email }, { last_connection: Date.now() });
+
         const token = generateToken({
           email,
           firstName: user.firstName,
@@ -77,6 +79,7 @@ export default class Sessions {
       }
 
     } catch (error) {
+      console.log(error);
       res.status(500).send(error)
     }
 
@@ -145,6 +148,7 @@ export default class Sessions {
 
     }
     catch (error) {
+      console.log(error);
       res.status(500).send(error)
     }
 

@@ -2,7 +2,6 @@
     <form action="/products" class="btn-ptr btn-volver">
         <input type="submit" value="VOLVER A PRODUCTOS">
     </form>
-    {{#each data}}
     <div class="tabla">
         <div class="titulos">
             <h1 id="ticket-cart">Ticket N° {{this.code}}</h1>
@@ -12,6 +11,8 @@
                 <li class="li-titles">Total</li>
             </ul>
         </div>
+        {{#if data.status}}
+        {{#each data.tickets}}
 
         <div id="form-real-time">
 
@@ -24,9 +25,13 @@
             </ul>
 
         </div>
+        {{/each}}
+        {{else}}
+        <div class="notItems-container">
+            <p class="notItems">No hay tickets!</p>
+        </div>
+        {{/if}}
     </div>
-    {{/each}}
-
 
 </div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
