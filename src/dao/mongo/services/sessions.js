@@ -325,6 +325,8 @@ export default class Sessions {
   }
 
   logout = async (req, res) => {
+    const email = req.user.email
+    await UserModel.findOneAndUpdate({ email }, { last_connection: Date.now() });
     req.logger.info(`El usuario ${req.user.email} ha cerrado sesion - DATE:${new Date().toLocaleTimeString()}`)
     return res.send({ status: "success" })
 

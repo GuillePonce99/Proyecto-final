@@ -11,7 +11,6 @@ import { transport } from "../../../config/nodemailer.js";
 export default class Products {
     constructor() { }
     getProductById = async (pid, req, res) => {
-        console.log(pid);
         try {
             const product = await ProductModel.findOne({ code: pid })
             if (!product) {

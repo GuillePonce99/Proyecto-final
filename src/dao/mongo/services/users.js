@@ -158,7 +158,7 @@ export default class Products {
 
         req.logger.info(`El usuario ${user.email} ahora es ${newRole} - DATE:${new Date().toLocaleTimeString()}`)
 
-        res.status(200).json({ message: "success" })
+        res.status(200).json({ message: "success", user })
     }
 
 
@@ -171,7 +171,7 @@ export default class Products {
         } else {
             await UserModel.findOneAndDelete({ email })
             req.logger.warning(`El usuario ${user.email} ha sido eliminado! - DATE:${new Date().toLocaleTimeString()}`)
-            return res.status(200).json({ message: "success", user: user.email })
+            return res.status(200).json({ message: "success", email: user.email })
         }
     }
 

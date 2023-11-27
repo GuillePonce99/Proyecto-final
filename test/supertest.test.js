@@ -6,14 +6,14 @@ const requester = supertest("http://localhost:8080/")
 
 describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
 
+    const admin = {
+        email: "admin@coder.com",
+        password: "admin"
+    }
     //TEST DEL MODULO DE PRODUCTOS
     describe("Test de productos", () => {
         let cookie
         let productCode
-        const admin = {
-            email: "admin@coder.com",
-            password: "admin"
-        }
 
         //before para iniciar sesion y asi generar un token que autorize a los demas test
         before("El endpoint POST /api/sessions/login debe de iniciar sesion como ADMIN para continuar con los siguientes tests", async () => {
@@ -153,8 +153,24 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
 
     //TEST DEL MODULO DE SESSIONS
     describe("Test de sessions", () => {
+        let cookieAdmin
         let cookie
         let uid
+        let email
+
+        //before para iniciar sesion como ADMIN 
+        before("El endpoint POST /api/sessions/login debe de iniciar sesion como ADMIN para continuar con los siguientes tests", async () => {
+            const result = await requester.post("api/sessions/login").send(admin)
+            const cookieResult = await result.headers["set-cookie"][0]
+            expect(cookieResult).to.be.ok
+            cookieAdmin = {
+                name: cookieResult.split("=")[0],
+                value: cookieResult.split("=")[1]
+            }
+            expect(cookieAdmin.name).to.be.ok.and.eql("coderCookieToken")
+            expect(cookieAdmin.value).to.be.ok
+        })
+
         it("El endpoint POST /api/sessions/signup debe CREAR un usuario nuevo", async () => {
             const mockUser = {
                 firstName: "user",
@@ -164,6 +180,7 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
                 password: "test"
             }
             const { _body } = await requester.post("api/sessions/signup").send(mockUser)
+            email = mockUser.email
             uid = _body.result._id
             expect(_body.result).to.be.ok
         })
@@ -189,22 +206,18 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
             expect(_body.payload.email).to.be.ok.and.eql("userTest@gmail.com")
         })
 
-        it("El endpoint GET /api/sessions/premium/:uid debe de cambiar el rol del usuario que inicio sesion", async () => {
-            const oldUser = await requester.get("api/sessions/current").set("Cookie", [`${cookie.name}=${cookie.value}`])
-            const result = await requester.get(`api/sessions/premium/${uid}`).set("Cookie", [`${cookie.name}=${cookie.value}`])
-            const cookieResult = await result.headers["set-cookie"][0]
-            expect(cookieResult).to.be.ok
-            cookie = {
-                name: cookieResult.split("=")[0],
-                value: cookieResult.split("=")[1]
-            }
-            expect(result._body.user.role).to.be.ok.and.to.not.be.eql(oldUser._body.payload.role)
+        it("El endpoint GET /api/users/premium/:email/:newRole debe de cambiar el rol del usuario que inicio sesion", async () => {
+            const currentUser = await requester.get("api/sessions/current").set("Cookie", [`${cookie.name}=${cookie.value}`])
+            const newRole = currentUser._body.payload.role === "user" ? "user_premium" : "user"
+            const result = await requester.get(`api/users/premium/${email}/${newRole}`).set("Cookie", [`${cookieAdmin.name}=${cookieAdmin.value}`])
+
+            expect(result._body.user.role).to.be.ok.and.to.not.be.eql(currentUser._body.payload.role)
         })
 
-        it("El endpoint DELETE /api/sessions/deleteUser/:uid debe de eliminar el usuario que inicio sesion", async () => {
-            const { _body } = await requester.delete(`api/sessions/deleteUser/${uid}`).set("Cookie", [`${cookie.name}=${cookie.value}`])
+        it("El endpoint DELETE /api/users/deleteUser/:email debe de eliminar el usuario que inicio sesion", async () => {
+            const { _body } = await requester.delete(`api/users/deleteUser/${email}`).set("Cookie", [`${cookieAdmin.name}=${cookieAdmin.value}`])
             expect(_body.message).to.be.ok.and.eql("success")
-            expect(_body.id).to.be.eql(uid)
+            expect(_body.email).to.be.eql(email)
         })
     })
 })
