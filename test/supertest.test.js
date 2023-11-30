@@ -10,6 +10,13 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
         email: "admin@coder.com",
         password: "admin"
     }
+    const mockUser = {
+        firstName: "user",
+        lastName: "test",
+        age: 30,
+        email: "userTest@gmail.com",
+        password: "test"
+    }
     //TEST DEL MODULO DE PRODUCTOS
     describe("Test de productos", () => {
         let cookie
@@ -80,13 +87,14 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
         let cookie
         let cartId
         let productId = "64dd779acfd3bcf287cc40d1"
-        const userTest = {
-            email: "guille@gmail.com",
-            password: "123"
-        }
+
         //before para iniciar sesion y asi generear un token que autorize a los demas test
-        before("El endpoint POST /api/sessions/login debe de iniciar sesion como USER para continuar con los siguientes tests", async () => {
-            const result = await requester.post("api/sessions/login").send(userTest)
+        before("El endpoint POST /api/sessions/login debe de registrar e iniciar sesion como USER para continuar con los siguientes tests", async () => {
+            const signup = await requester.post("api/sessions/signup").send(mockUser)
+            expect(signup._body.result.email).to.be.ok.and.eql(mockUser.email)
+
+            const result = await requester.post("api/sessions/login").send(mockUser)
+
             const cookieResult = await result.headers["set-cookie"][0]
             expect(cookieResult).to.be.ok
             cookie = {
@@ -107,7 +115,7 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
             expect(statusCode).to.be.eql(200)
             expect(ok).to.be.true
             expect(_body.cart).to.be.ok.and.have.property("_id")
-            expect(_body.user.email).to.be.ok.and.be.eql(userTest.email)
+            expect(_body.user.email).to.be.ok.and.be.eql(mockUser.email)
         })
 
 
@@ -149,14 +157,26 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
             expect(_body.status).to.be.ok.and.be.eql("success")
         })
 
+        after("Eliminar usuario creado para el test", async () => {
+            const result = await requester.post("api/sessions/login").send(admin)
+            const cookieResult = await result.headers["set-cookie"][0]
+            expect(cookieResult).to.be.ok
+            const cookieAdmin = {
+                name: cookieResult.split("=")[0],
+                value: cookieResult.split("=")[1]
+            }
+            const { _body } = await requester.delete(`api/users/deleteUser/${mockUser.email}`).set("Cookie", [`${cookieAdmin.name}=${cookieAdmin.value}`])
+            expect(_body.message).to.be.ok.and.eql("success")
+            expect(_body.email).to.be.eql(mockUser.email)
+        })
     })
 
     //TEST DEL MODULO DE SESSIONS
     describe("Test de sessions", () => {
         let cookieAdmin
         let cookie
-        let uid
         let email
+        let uid
 
         //before para iniciar sesion como ADMIN 
         before("El endpoint POST /api/sessions/login debe de iniciar sesion como ADMIN para continuar con los siguientes tests", async () => {
@@ -172,14 +192,8 @@ describe("Testing API (PRODUCTS,CARTS,SESSIONS)", () => {
         })
 
         it("El endpoint POST /api/sessions/signup debe CREAR un usuario nuevo", async () => {
-            const mockUser = {
-                firstName: "user",
-                lastName: "test",
-                age: 30,
-                email: "userTest@gmail.com",
-                password: "test"
-            }
             const { _body } = await requester.post("api/sessions/signup").send(mockUser)
+
             email = mockUser.email
             uid = _body.result._id
             expect(_body.result).to.be.ok

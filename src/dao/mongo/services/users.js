@@ -40,7 +40,7 @@ export default class Products {
 
                     await transport.sendMail({
                         from: "Ecommerce Test",
-                        to: user.email,
+                        to: "guille.13577@gmail.com",
                         subject: "Cuenta eliminada",
                         html:
                             `
@@ -79,7 +79,7 @@ export default class Products {
                                         <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
                                             <tr>
                                             <td style="padding:0 0 36px 0;color:#153643;">
-                                                <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">${user.firstName.toUpperCase()}</h1>
+                                                <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">${user.email.toUpperCase()}</h1>
                                                 <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Su cuenta ha sido eliminada por permanecer demasiado tiempo inactiva!</p>
                                             </td>
                                             </tr>
@@ -167,7 +167,7 @@ export default class Products {
         const user = await UserModel.findOne({ email })
         if (!user) {
             req.logger.error(`Error al eliminar un usuario : No se encuentra en la base de datos!`)
-            return res.status(401).json({ message: "El usuario no existe!" })
+            return res.status(401).json({ error: "El usuario no existe!" })
         } else {
             await UserModel.findOneAndDelete({ email })
             req.logger.warning(`El usuario ${user.email} ha sido eliminado! - DATE:${new Date().toLocaleTimeString()}`)

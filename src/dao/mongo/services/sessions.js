@@ -1,9 +1,6 @@
 import UserModel from "../models/users.model.js"
 import { createHash, generateToken, isValidPassword } from "../../../utils.js"
 import Config from "../../../config/config.js"
-import EErrors from "../../../services/errors/enums.js"
-import { generateUserErrorInfo } from "../../../services/errors/info.js"
-import CustomError from "../../../services/errors/CustomError.js"
 import { signupDTO, userDTO } from "../../DTOs/session.dto.js"
 import { transport } from "../../../config/nodemailer.js"
 
@@ -28,35 +25,17 @@ export default class Sessions {
 
       } else if (email === Config.ADMIN_EMAIL && password !== Config.ADMIN_PASSWORD) {
         req.logger.error(`Error al iniciar sesion (ADMIN) : La contraseña es incorrecta!`)
-        CustomError.createError({
-          name: "Error al iniciar sesion",
-          cause: generateUserErrorInfo(user),
-          message: "Contraseña incorrecta!",
-          code: EErrors.INVALID_TYPES_ERROR
-        })
-        return res.status(401).json({ message: "Contraseña incorrecta!" })
+        return res.status(401).json({ error: "Contraseña incorrecta!" })
 
       } else {
 
         const user = await UserModel.findOne({ email })
         if (user === null) {
           req.logger.error(`Error al iniciar sesion: El email es incorrecta!`)
-          CustomError.createError({
-            name: "Error al iniciar sesion",
-            cause: generateUserErrorInfo(user),
-            message: "Email incorrecto!",
-            code: EErrors.INVALID_TYPES_ERROR
-          })
-          return res.status(401).json({ message: "" })
+          return res.status(401).json({ error: "Email incorrecto!" })
         } else if (!isValidPassword(password, user)) {
           req.logger.error(`Error al iniciar sesion: La contraseña es incorrecta!`)
-          CustomError.createError({
-            name: "Error al iniciar sesion",
-            cause: generateUserErrorInfo(user),
-            message: "Contraseña incorrecta!",
-            code: EErrors.INVALID_TYPES_ERROR
-          })
-          return res.status(401).json({ message: "Contraseña incorrecta!" })
+          return res.status(401).json({ error: "Contraseña incorrecta!" })
         }
 
         await UserModel.findOneAndUpdate({ email }, { last_connection: Date.now() });
@@ -117,24 +96,12 @@ export default class Sessions {
 
       if (repetedEmail) {
         req.logger.error(`Error al crear un usuario : El email ${user.email} ya se encuentra en uso!`)
-        CustomError.createError({
-          name: "Error al registrarse",
-          cause: generateUserErrorInfo(user),
-          message: "El email ingresado ya existe!",
-          code: EErrors.DATABASE_ERROR
-        })
-        //return res.status(401).json({ message: "El email ingresado ya existe!" })
+        return res.status(401).json({ error: "El email ingresado ya existe!" })
       }
 
       if (user.age <= 0 || user.age >= 100) {
         req.logger.error(`Error al crear un usuario : La edad ingresada no es correcta!`)
-        CustomError.createError({
-          name: "Error al registrarse",
-          cause: generateUserErrorInfo(user),
-          message: "Ingrese una edad correcta!",
-          code: EErrors.INVALID_TYPES_ERROR
-        })
-        return res.status(401).json({ message: "Ingrese una edad correcta!" })
+        return res.status(401).json({ error: "Ingrese una edad correcta!" })
       }
 
       user.password = createHash(user.password)
@@ -161,20 +128,14 @@ export default class Sessions {
 
       if (!user) {
         req.logger.error(`Error al cambiar la contraseña : El email ${email} no se ha encontrado!`)
-        CustomError.createError({
-          name: "Email incorrecto!",
-          cause: generateUserErrorInfo(user),
-          message: "Email incorrecto!",
-          code: EErrors.DATABASE_ERROR
-        })
-        return res.status(401).json({ message: "Email incorrecto!" })
+        return res.status(401).json({ error: "Email incorrecto!" })
       }
 
       let token = generateToken(user.toJSON())
 
       let result = await transport.sendMail({
         from: "Coder test",
-        to: email,
+        to: "guille.13577@gmail.com",
         subject: "Cambio de contraseña",
         html:
           `
@@ -292,22 +253,13 @@ export default class Sessions {
 
       if (!user) {
         req.logger.error(`Error al cambiar la contraseña : El email ${email} no se ha encontrado!`)
-        CustomError.createError({
-          name: "Email incorrecto!",
-          cause: generateUserErrorInfo(user),
-          message: "Email incorrecto!",
-          code: EErrors.DATABASE_ERROR
-        })
+        return res.status(401).json({ error: "Email incorrecto!" })
+
       }
 
       if (isValidPassword(newPassword, user)) {
         req.logger.error(`Error al cambiar la contraseña : Contraseña en uso!`)
-        CustomError.createError({
-          name: "Contraseña en uso!",
-          cause: generateUserErrorInfo(user),
-          message: "Contraseña en uso!",
-          code: EErrors.DATABASE_ERROR
-        })
+        return res.status(401).json({ error: "Contraseña en uso!" })
       }
 
       user.password = createHash(newPassword)

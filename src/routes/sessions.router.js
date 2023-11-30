@@ -22,9 +22,9 @@ export default class SessionRouter extends Routes {
         this.get("/current", ["USER", "USER_PREMIUM", "ADMIN"], passportCall("jwt"), current)
 
         //Rutas en caso de que exista un error en la autenticacion de passport
-        this.get("/failureSignup", ["PUBLIC"], (req, res) => { res.status(401).json({ message: "Email en uso o edad incorrecta!" }) })
+        this.get("/failureSignup", ["PUBLIC"], (req, res) => { res.status(401).json({ error: "Email en uso o edad incorrecta!" }) })
 
-        this.get("/failureLogin", ["PUBLIC"], (req, res) => { res.status(401).json({ message: "Credenciales Incorrectas!" }) })
+        this.get("/failureLogin", ["PUBLIC"], (req, res) => { res.status(401).json({ error: "Credenciales Incorrectas!" }) })
 
         //Rutas de login con github
         this.get("/github", ["PUBLIC"], passportCall("github", { scope: ["user:email"] }), (req, res) => { res.status(200).send("success") })

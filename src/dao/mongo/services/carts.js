@@ -3,9 +3,6 @@ import CartsModel from "../models/carts.model.js"
 import UserModel from "../models/users.model.js"
 import jwt from "jsonwebtoken"
 import Config from "../../../config/config.js"
-import CustomError from "../../../services/errors/CustomError.js";
-import EErrors from "../../../services/errors/enums.js";
-import { generateProductErrorInfo } from "../../../services/errors/info.js";
 
 const adminArray = []
 export default class Carts {
@@ -31,7 +28,7 @@ export default class Carts {
 
             if (carrito === null) {
                 req.logger.error(`Error al obtener el carrito code ${cid}: No se ha encontrado un carrito con este code!`)
-                res.status(404).json({ message: `Not Found` })
+                res.status(404).json({ error: `Not Found` })
 
             } else {
                 req.logger.info(`Se ha obtenido el carrito code ${cid} - DATE:${new Date().toLocaleTimeString()}`)
@@ -54,20 +51,6 @@ export default class Carts {
 
             const userToken = jwt.verify(token, Config.COOKIE_KEY)
 
-            /*
-            if (userToken.email === Config.ADMIN_EMAIL) {
-                const admin = {
-                    email: userToken.email,
-                    role: userToken.role,
-                    cart: cart._id
-                }
-                adminArray.push(admin)
-            } else {
-                const user = await UserModel.findOne({ "email": userToken.email })
-                user.cart = cart._id
-                user.save()
-            }
-            */
             const user = await UserModel.findOne({ "email": userToken.email })
             user.cart = cart._id
             user.save()
@@ -97,12 +80,7 @@ export default class Carts {
 
                 if (producto.owner === userToken.email) {
                     req.logger.error(`Error al agregar un producto al carrito ${cid}: No puede agregar su mismo producto!`)
-                    CustomError.createError({
-                        name: "Error al agregar el producto",
-                        cause: generateProductErrorInfo(product),
-                        message: `No puede agregar su mismo producto`,
-                        code: EErrors.INVALID_TYPES_ERROR
-                    })
+                    return res.status(401).json({ error: "No puede agregar su mismo producto!" })
                 }
             }
 
@@ -149,7 +127,7 @@ export default class Carts {
 
             } else {
                 req.logger.error(`Error al eliminar el carrito ID: ${cid} : No se ha encontrado un carrito con este ID!`)
-                res.status(404).json({ message: `Not Found` })
+                res.status(404).json({ error: `Not Found` })
             }
         }
 
@@ -165,7 +143,7 @@ export default class Carts {
 
             if (carrito.matchedCount === 0) {
                 req.logger.error(`Error al eliminar los productos del carrito ID: ${cid} : No se ha encontrado un carrito con este ID!`)
-                res.status(404).json({ message: `Not Found` })
+                res.status(404).json({ error: `Not Found` })
 
             } else {
                 req.logger.info(`Se han eliminado los productos del carrito ID: ${cid} - DATE:${new Date().toLocaleTimeString()}`)
@@ -254,7 +232,7 @@ export default class Carts {
 
             if (!carrito) {
                 req.logger.error(`Error al obtener el carrito: ${cid} (VIEW) : No se ha encontrado un carrito con este ID!`)
-                res.status(404).json({ message: "Not Found" })
+                res.status(404).json({ error: "Not Found" })
             }
 
             const products = carrito.products.map((e) => ({
@@ -305,15 +283,15 @@ export default class Carts {
             }
 
             if (!user.cart) {
-                req.logger.error(`Error al obtener el carrito del usuario : ${userToken.email} : No se ha encontrado el usuario!`)
-                res.status(404).json({ message: `Not Found` })
+                req.logger.error(`Error al obtener el carrito del usuario : ${userToken.email} : No se ha encontrado el carrito!`)
+                res.status(404).json({ error: `Not Found` })
 
             } else {
                 const carrito = await CartsModel.findOne({ "_id": user.cart._id })
 
                 if (carrito === null) {
                     req.logger.error(`Error al obtener el carrito ID: ${user.cart._id} del usuario: ${user.email} : No se ha encontrado un carrito con este ID!`)
-                    res.status(404).json({ message: `Not Found` })
+                    res.status(404).json({ error: `Not Found` })
 
                 } else {
                     req.logger.info(`Se ha obtenido el carrito ID: ${carrito._id} (VIEW) - DATE:${new Date().toLocaleTimeString()}`)
@@ -351,7 +329,7 @@ export default class Carts {
 
                 } else {
                     req.logger.error(`Error al realizar la compra : No hay stock para el producto: ${product.title}!`)
-                    res.status(404).json({ message: `Sin stock` })
+                    res.status(404).json({ error: `Sin stock` })
 
                 }
             })

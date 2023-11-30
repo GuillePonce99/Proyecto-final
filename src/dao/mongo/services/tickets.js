@@ -85,17 +85,17 @@ export default class Tickets {
 
       res.status(200).json({ message: "success", ticket: newTicket, ids })
     } else {
-      res.status(400).json({ message: "Sin stock", ids })
+      res.status(400).json({ error: "Sin stock", ids })
     }
 
   }
 
   sendTicket = async (tid, user, res) => {
     const ticket = await TicketsModel.findOne({ code: tid })
-
+    console.log(ticket);
     let result = await transport.sendMail({
       from: "Coder test",
-      to: user.email,
+      to: "guille.13577@gmail.com",
       subject: "COMPRA CODER TEST",
       html:
         `

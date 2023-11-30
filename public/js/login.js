@@ -16,7 +16,7 @@ const signup = async (firstName, lastName, age, email, password) => {
         return true
     } else {
         const data = await response.json()
-        return data.name
+        return data.error
     }
 }
 
@@ -34,7 +34,7 @@ const login = async (email, password) => {
         return true
     } else {
         const data = await response.json()
-        return data.name
+        return data.error
     }
 }
 
@@ -52,7 +52,7 @@ const forgot = async (email) => {
             return true
         } else {
             const data = await response.json()
-            return data.name
+            return data.error
         }
 
     }
@@ -77,7 +77,7 @@ const newPass = async (email, newPassword) => {
             return true
         } else {
             const data = await response.json()
-            return data.name
+            return data.error
         }
 
     }

@@ -67,12 +67,8 @@ const saludo = () => {
     updateCartNumber()
 }
 
-//Funcion para cambiar el rol de usuario
 
-
-
-
-//Funcion para obtener del LS el Id el carrito
+//Funcion para obtener de la BD el Id el carrito
 const getCartId = async () => {
     if (profile.dataset.admin !== "true") {
         const response = await fetch("/api/carts/user/cart")
@@ -300,8 +296,8 @@ if (actions) {
                 location.reload();
             }, 3000)
         } else {
-            const error = await response.json()
-            actionAdd.innerHTML = `${error.name}`
+            const data = await response.json()
+            actionAdd.innerHTML = `${data.error}`
             setTimeout(() => {
                 actionAdd.innerHTML = "";
             }, 2000)
@@ -336,8 +332,8 @@ if (actions) {
                 location.reload();
             }, 3000)
         } else {
-            const error = await response.json()
-            actionDelete.innerHTML = `${error.name}`
+            const data = await response.json()
+            actionDelete.innerHTML = `${data.error}`
             setTimeout(() => {
                 actionDelete.innerHTML = "";
             }, 2000)

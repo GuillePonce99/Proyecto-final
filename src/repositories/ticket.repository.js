@@ -24,6 +24,7 @@ export default class TicketRepository {
     sendTicket = async (req, res) => {
         const { tid } = req.params
         const user = req.user
+        console.log(tid, user);
         return await this.dao.sendTicket(tid, user, res)
     }
 }

@@ -9,7 +9,6 @@ import initializePassport from "./config/passport.config.js"
 import cookieParser from "cookie-parser"
 import Config from "./config/config.js"
 //import compression from "express-compression"
-import errorHandler from "./middlewares/errors/index.js"
 import { addLoger, logger } from "./config/logger.js"
 import cluster from "cluster"
 import { cpus } from "os"
@@ -108,21 +107,8 @@ if (cluster.isPrimary) {
     const routerUsers = new UsersRouter()
     app.use("/api/users", routerUsers.getRouter())
 
-    // MANEJO DE ERRORES
-    app.use(errorHandler)
-
     //MOCKING
     app.get("/mockingproducts", mockingProduct)
-
-    //EJEMPLO LOGGER
-    app.get("/loggerTest", (req, res) => {
-        req.logger.fatal("CRITICAL!!")
-        req.logger.error("ERROR!!")
-        req.logger.warning("Alerta!!")
-        req.logger.info("INFO!")
-        req.logger.debug("DEBUG")
-        res.send({ message: "Prueba de logger" })
-    })
 
     //RENDER PARA TODAS LAS PAGINAS QUE NO EXISTAN
     app.use("*", (req, res) => {

@@ -1,7 +1,4 @@
 import ProductModel from "../models/products.model.js";
-import CustomError from "../../../services/errors/CustomError.js";
-import EErrors from "../../../services/errors/enums.js";
-import { generateProductErrorInfo } from "../../../services/errors/info.js";
 import UserModel from "../models/users.model.js";
 import jwt from "jsonwebtoken"
 import Config from "../../../config/config.js";
@@ -15,7 +12,7 @@ export default class Products {
             const product = await ProductModel.findOne({ code: pid })
             if (!product) {
                 req.logger.error(`Error al obtener el producto code ${pid}: No se encontro en la base de datos!`)
-                return res.status(404).json({ message: "Not Found" });
+                return res.status(404).json({ error: "Not Found" });
             }
             const result = await ProductModel.findOne({ code: pid });
             req.logger.info(`Se ha obtenido el producto ${result.title} - DATE:${new Date().toLocaleTimeString()}`)
@@ -32,31 +29,19 @@ export default class Products {
 
         if (!title || !description || !code || !price || !category) {
             req.logger.error(`Error al agregar el producto: faltan datos!`)
-            CustomError.createError({
-                name: "Error al agregar el producto",
-                cause: generateProductErrorInfo(product),
-                message: "Faltan datos!",
-                code: EErrors.INVALID_TYPES_ERROR
-            })
-
+            return res.status(401).json({ error: "Faltan datos!" })
         }
 
         if (id) {
             req.logger.error(`Error al agregar el producto: no debe incluir ID!`)
-            return res.status(401).json({ message: "No incluir ID" });
+            return res.status(401).json({ error: "No incluir ID" });
         }
 
         const repetedCode = await ProductModel.findOne({ "code": code })
 
         if (repetedCode) {
             req.logger.error(`Error al agregar el producto: ya existe el producto con el code: ${code}`)
-            CustomError.createError({
-                name: "Error al agregar el producto",
-                cause: generateProductErrorInfo(product),
-                message: `Ya existe el producto con el CODE: ${code}`,
-                code: EErrors.INVALID_TYPES_ERROR
-            })
-            //return res.status(404).json({ message: `Ya existe el producto con el CODE: ${code}` });
+            return res.status(404).json({ error: `Ya existe el producto con el CODE: ${code}` });
         }
 
         const token = req.cookies["coderCookieToken"];
@@ -101,13 +86,7 @@ export default class Products {
             //filtro por si el producto no existe
             if (!product) {
                 req.logger.error(`Error al eliminar el producto code ${pid}: No se encontro en la base de datos!`)
-                CustomError.createError({
-                    name: "Error al eliminar el producto",
-                    cause: generateProductErrorInfo(product),
-                    message: "Not Found",
-                    code: EErrors.DATABASE_ERROR
-                })
-                //return res.status(404).json({ message: "Not Found" });
+                return res.status(404).json({ error: "Not Found" });
             }
 
             //token para saber quien esta eliminando este producto si un admin o un user_premium
@@ -235,12 +214,7 @@ export default class Products {
                 //filtro para que solo pueda eliminar sus propios productos
                 if (product.owner !== user.email) {
                     req.logger.error(`Error al eliminar el producto code ${pid}: No tiene permisos!`)
-                    CustomError.createError({
-                        name: "Not Authorized",
-                        cause: generateProductErrorInfo(product),
-                        message: "Not Authorized",
-                        code: EErrors.DATABASE_ERROR
-                    })
+                    return res.status(401).json({ error: "Not Authorized" })
                 }
 
                 if (user.role === "user_premium") {
@@ -365,26 +339,14 @@ export default class Products {
 
             if (!product) {
                 req.logger.error(`Error al actualizar el producto code: ${pid}: No se encontro en la base de datos!`)
-                CustomError.createError({
-                    name: "Error al actualizar el producto",
-                    cause: generateProductErrorInfo(product),
-                    message: "Not Found",
-                    code: EErrors.DATABASE_ERROR
-                })
-                //return res.status(404).json({ message: "Not Found" });
+                return res.status(404).json({ error: "Not Found" });
             }
 
             const repetedCode = await ProductModel.findOne({ "code": body.code })
 
             if (repetedCode) {
                 req.logger.error(`Error al actualizar el producto code ${pid}: Ya existe un producto con este code!`)
-                CustomError.createError({
-                    name: "Error al actualizar el producto",
-                    cause: generateProductErrorInfo(product),
-                    message: `Ya existe el producto con el CODE: ${body.code}`,
-                    code: EErrors.INVALID_TYPES_ERROR
-                })
-                //return res.status(404).json({ message: `Ya existe el producto con el CODE: ${body.code}` });
+                return res.status(404).json({ error: `Ya existe el producto con el CODE: ${body.code}` });
             }
 
             const actualizado = await ProductModel.findOneAndUpdate({ code: pid }, body, { new: true })
