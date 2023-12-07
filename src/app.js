@@ -8,6 +8,7 @@ import passport from "passport"
 import initializePassport from "./config/passport.config.js"
 import cookieParser from "cookie-parser"
 import Config from "./config/config.js"
+import cors from "cors"
 //import compression from "express-compression"
 import { addLoger, logger } from "./config/logger.js"
 import swaggerJsdoc from "swagger-jsdoc"
@@ -51,6 +52,7 @@ const swaggerOptions = {
 const specs = swaggerJsdoc(swaggerOptions)
 
 //CONFIG
+app.use(cors())
 app.use(express.json());
 app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }));
