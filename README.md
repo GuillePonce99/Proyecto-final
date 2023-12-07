@@ -19,9 +19,9 @@
     <li><a href="#instalacion">Instalacion</a></li>
     <li><a href="#requisitos">Requisitos</a></li>
     <li><a href="#Estructura">Estructura</a></li>
-    <li><a href="#variables-de-entorno">Variables</a></li>
-    <li><a href="#configuracion-y-comandos">Configuracion</a></li>
-    <li><a href="#credenciales-de-admin">Credenciales Admin</a></li>
+    <li><a href="#variables-de-entorno">Variables de entorno</a></li>
+    <li><a href="#configuracion-y-comandos">Configuracion y Comandos</a></li>
+    <li><a href="#credenciales-de-admin">Credenciales de Admin</a></li>
     <li><a href="#testing">Testing</a></li>
     <li><a href="#deploy">Deploy</a></li>
   </ol>
