@@ -19,8 +19,10 @@
     <li><a href="#instalacion">Instalacion</a></li>
     <li><a href="#requisitos">Requisitos</a></li>
     <li><a href="#Estructura">Estructura</a></li>
-    <li><a href="#variables">Variables</a></li>
-    <li><a href="#configuracion">Configuracion</a></li>
+    <li><a href="#variables-de-entorno">Variables</a></li>
+    <li><a href="#configuracion-y-comandos">Configuracion</a></li>
+    <li><a href="#credenciales-de-admin">Credenciales Admin</a></li>
+    <li><a href="#testing">Testing</a></li>
     <li><a href="#deploy">Deploy</a></li>
   </ol>
 </details>
@@ -133,7 +135,7 @@ Asegúrate de tener los siguientes requisitos instalados en tu entorno de desarr
 - MongoDB
 
 
-## Configuración del Entorno y Persistencia de datos.
+## Configuración y Comandos.
 
 - El servidor se configura utilizando el gestor de comandos Commander para especificar el ambiente de ejecución y el tipo de persistencia.
 
@@ -189,7 +191,7 @@ Incluye 3 (tres) tests desarrollados para:
 npm test
 ```
 
-## Enlace al sitio activo
+## Deploy
 
 - [Deploy en Railway](https://proyecto-final-backend-production-33d4.up.railway.app/) (Funcionalidad Front-end básica)
 
