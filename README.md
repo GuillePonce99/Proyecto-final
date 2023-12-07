@@ -1,10 +1,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h1 align="center">PROYECTO FINAL ECOMMERCE - CODERHOUSE</h1>
 
   <p align="center">
@@ -20,16 +16,14 @@
 <details>
   <summary>Tabla de contenido</summary>
   <ol>
-    <li>
-      <a href="#intalacion">Instalacion</a>
-      <ul>
-        <li><a href="#requisitos">Requisitos</a></li>
-      </ul>
-    </li>
+    <li><a href="#instalacion">Instalacion</a></li>
+    <li><a href="#requisitos">Requisitos</a></li>
     <li><a href="#Estructura">Estructura</a></li>
-    <li><a href="#variables">Variables</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#variables-de-entorno-">Variables de entorno</a></li>
+    <li><a href="#configuración-y-comandos">Configuracion y Comandos</a></li>
+    <li><a href="#credenciales-de-admin">Credenciales de Admin</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#deploy">Deploy</a></li>
   </ol>
 </details>
 
@@ -141,7 +135,7 @@ Asegúrate de tener los siguientes requisitos instalados en tu entorno de desarr
 - MongoDB
 
 
-## Configuración del Entorno y Persistencia de datos.
+## Configuración y Comandos.
 
 - El servidor se configura utilizando el gestor de comandos Commander para especificar el ambiente de ejecución y el tipo de persistencia.
 
@@ -162,7 +156,7 @@ Asegúrate de tener los siguientes requisitos instalados en tu entorno de desarr
 
 
 
-### Credenciales de Admin :
+### Credenciales de Admin
 
 #### Email:
 
@@ -197,7 +191,7 @@ Incluye 3 (tres) tests desarrollados para:
 npm test
 ```
 
-## Enlace al sitio activo
+## Deploy
 
 - [Deploy en Railway](https://proyecto-final-backend-production-33d4.up.railway.app/) (Funcionalidad Front-end básica)
 
