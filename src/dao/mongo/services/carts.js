@@ -3,6 +3,7 @@ import CartsModel from "../models/carts.model.js"
 import UserModel from "../models/users.model.js"
 import jwt from "jsonwebtoken"
 import Config from "../../../config/config.js"
+import { el } from "@faker-js/faker"
 
 const adminArray = []
 export default class Carts {
@@ -92,6 +93,9 @@ export default class Carts {
                 req.logger.error(`Error al agregar el producto: ${pid} al carrito : No se ha encontrado un producto con este code!`)
                 return res.status(404).json({ error: "Product Not Found" })
 
+            } else if (producto.stock === 0) {
+                req.logger.error(`Error al agregar el producto: ${pid} al carrito : No hay stock!`)
+                return res.status(404).json({ error: "No hay stock" })
             }
 
             const productIndex = carrito.products.findIndex(e => e.product._id.equals(producto._id))

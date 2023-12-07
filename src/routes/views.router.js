@@ -14,5 +14,6 @@ export default class ViewsRouter extends Routes {
         this.get("/signup", ["PUBLIC"], viewsController.signup)
         this.get("/tickets", ["USER", "USER_PREMIUM", "ADMIN"], passportCall("jwt"), viewsController.tickets)
         this.get("/usersManager", ["ADMIN"], passportCall("jwt"), viewsController.usersManager)
+        this.get("/payment", ["USER", "USER_PREMIUM"], passportCall("jwt"), viewsController.payment)
     }
 }

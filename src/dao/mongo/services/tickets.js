@@ -95,7 +95,7 @@ export default class Tickets {
     console.log(ticket);
     let result = await transport.sendMail({
       from: "Coder test",
-      to: "guille.13577@gmail.com",
+      to: user.email,
       subject: "COMPRA CODER TEST",
       html:
         `

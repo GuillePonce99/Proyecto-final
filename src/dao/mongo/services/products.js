@@ -103,7 +103,7 @@ export default class Products {
                 } else if (owner.role === "user_premium") { //filtro por si el dueño del producto es un usuario premium (mandar email)
                     await transport.sendMail({
                         from: "Ecommerce Test",
-                        to: "guille.13577@gmail.com",
+                        to: owner.email,
                         subject: "Producto eliminado",
                         html:
                             `
@@ -220,7 +220,7 @@ export default class Products {
                 if (user.role === "user_premium") {
                     await transport.sendMail({
                         from: "Ecommerce Test",
-                        to: "guille.13577@gmail.com",
+                        to: user.email,
                         subject: "Producto eliminado",
                         html:
                             `

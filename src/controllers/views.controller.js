@@ -60,7 +60,6 @@ export class viewsController {
         const data = await usersServices.getUsers(req, res)
         res.render("usersManager", { style: "styles.css", data })
     }
-
 }
 
 

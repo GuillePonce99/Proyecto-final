@@ -5,6 +5,7 @@ const quantityElem = document.querySelectorAll("#elem-quantity")
 const btnDelete = document.querySelectorAll("#btn-delete")
 const totalElem = document.getElementById("total-cart")
 const btnVolver = document.getElementById("btnVolver")
+const btnPayment = document.getElementById("btn-payment")
 
 const purchase = async () => {
     const btnBuy = document.getElementById("btn-buy")
@@ -16,7 +17,24 @@ const purchase = async () => {
 
         e.preventDefault()
         const code = RandomCode(10)
-        const response = await fetch(`/api/carts/${cid}/purchase`, {
+        const response = await fetch(`/api/payments/mercadopago-payment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cid })
+        })
+        console.log(response);
+        if (response.ok) {
+            const data = await response.json()
+
+            setTimeout(() => {
+                window.location.href = data.payload.sandbox_init_point
+            }, 2000)
+
+        }
+
+        const order = await fetch(`/api/carts/${cid}/purchase`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,9 +42,8 @@ const purchase = async () => {
             body: JSON.stringify({ code })
         })
 
-        if (response.ok) {
-            const data = await response.json()
-
+        if (order.ok) {
+            const data = await order.json()
             if (data.ids.length > 0) {
                 Toastify({
                     text: `Algunos productos no estan disponibles`,
@@ -56,14 +73,11 @@ const purchase = async () => {
 
             }
             await fetch(`/api/tickets/sendTicket/${data.ticket.code}`).catch(error => console.log(error))
-
             setTimeout(() => {
-
                 location.reload()
             }, 2500)
-
-
         } else {
+
             Toastify({
                 text: `Productos sin stock!`,
                 duration: 3000,
@@ -78,7 +92,6 @@ const purchase = async () => {
             }).showToast()
         }
     })
-
 }
 
 const RandomCode = (n) => {
@@ -113,13 +126,11 @@ const updateTotal = async () => {
         price.push(product.product.price * product.quantity)
     })
     let total = price.reduce((acc, currentValue) => acc + currentValue, 0);
-    totalElem.innerHTML = `
-        <h2 class="total-cart"> TOTAL: $ ${total}</h2>
-        <button class="btn-ptr btn-buy" id="btn-buy" type="submit">FINALIZAR COMPRA</button>
-    `
+    totalElem.textContent = `TOTAL: $ ${total}`
     await purchase()
 }
 updateTotal()
+
 
 
 const updateQuantityDom = (id, n) => {

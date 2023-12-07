@@ -40,7 +40,7 @@ export default class Products {
 
                     await transport.sendMail({
                         from: "Ecommerce Test",
-                        to: "guille.13577@gmail.com",
+                        to: user.email,
                         subject: "Cuenta eliminada",
                         html:
                             `

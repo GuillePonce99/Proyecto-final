@@ -135,7 +135,7 @@ export default class Sessions {
 
       let result = await transport.sendMail({
         from: "Coder test",
-        to: "guille.13577@gmail.com",
+        to: user.email,
         subject: "Cambio de contraseña",
         html:
           `

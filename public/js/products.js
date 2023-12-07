@@ -213,6 +213,9 @@ btnAddCart.forEach(btn => {
 
             })
 
+            const data = await result.json()
+            const error = data.error
+
             if (result.ok) {
                 updateCartNumber()
 
@@ -233,7 +236,7 @@ btnAddCart.forEach(btn => {
             } else {
 
                 Toastify({
-                    text: 'Error al agregar el producto al carrito',
+                    text: error,
                     className: "success",
                     close: true,
                     gravity: "bottom",

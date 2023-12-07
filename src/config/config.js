@@ -19,6 +19,7 @@ dotenv.config({
 })
 
 export default {
+    MP_ACCESS_TOKEN: process.env.MP_ACCESS_TOKEN,
     MAILER_SERVICE: process.env.MAILER_SERVICE,
     MAILER_USER: process.env.MAILER_USER,
     MAILER_PASSWORD: process.env.MAILER_PASSWORD,

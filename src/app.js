@@ -10,11 +10,10 @@ import cookieParser from "cookie-parser"
 import Config from "./config/config.js"
 //import compression from "express-compression"
 import { addLoger, logger } from "./config/logger.js"
-import cluster from "cluster"
-import { cpus } from "os"
 import swaggerJsdoc from "swagger-jsdoc"
 import swaggerUiExpress from "swagger-ui-express"
-
+//ROUTERS
+import PaymentsRouter from "./routes/payments.router.js"
 import CartsRouter from "./routes/carts.router.js"
 import ProductsRouter from "./routes/products.router.js"
 import ViewsRouter from "./routes/views.router.js"
@@ -23,7 +22,21 @@ import TicketsRouter from "./routes/tickets.router.js"
 import UsersRouter from "./routes/users.router.js"
 import { mockingProduct } from "./controllers/product.controller.js"
 
-// SWAGGER
+const app = express()
+
+const environment = async () => {
+    await mongoose.connect(`mongodb+srv://${Config.MONGO_USER}:${Config.MONGO_PASSWORD}@coder.amwd2xp.mongodb.net/${Config.MONGO_DB}`)
+        .then(() => {
+            logger.info("DATABASE CONNECTED");
+            logger.info(`ENVIRONMENT: ${Config.ENVIRONMENT}`);
+        })
+        .catch((error) => {
+            console.log(error);
+            process.exit(4)
+        })
+}
+
+// SWAGGER CONFIG
 const swaggerOptions = {
     definition: {
         openapi: "3.0.1",
@@ -36,40 +49,6 @@ const swaggerOptions = {
 }
 
 const specs = swaggerJsdoc(swaggerOptions)
-
-//CLUSTER
-
-const numeroDeProcesadores = cpus().length
-/*
-if (cluster.isPrimary) {
-
-    console.log("Proceso primario, generando worker");
-    for (let i = 0; i < numeroDeProcesadores; i++) {
-        cluster.fork();
-    }
-    cluster.on("exit", (worker, code, signal) => {
-        console.log(`El proceso ${worker.process.pid} ha salido con el codigo ${code} y la señal ${signal}`);
-        console.log("Generando nuevo worker");
-        cluster.fork()
-    })
-
-} 
-*/
-
-
-const app = express()
-
-const environment = async () => {
-    await mongoose.connect(`mongodb+srv://${Config.MONGO_USER}:${Config.MONGO_PASSWORD}@coder.amwd2xp.mongodb.net/${Config.MONGO_DB}`)
-        .then(() => {
-            logger.info("DB IS CONNECTED");
-            logger.info(`ENTORNO: ${Config.ENVIRONMENT}`);
-        })
-        .catch((error) => {
-            console.log(error);
-            process.exit(4)
-        })
-}
 
 //CONFIG
 app.use(express.json());
@@ -108,6 +87,9 @@ app.use("/api/tickets", routerTickets.getRouter())
 
 const routerUsers = new UsersRouter()
 app.use("/api/users", routerUsers.getRouter())
+
+const routerPayments = new PaymentsRouter()
+app.use("/api/payments", routerPayments.getRouter())
 
 //MOCKING
 app.get("/mockingproducts", mockingProduct)
