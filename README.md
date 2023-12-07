@@ -1,10 +1,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h1 align="center">PROYECTO FINAL ECOMMERCE - CODERHOUSE</h1>
 
   <p align="center">
@@ -20,16 +16,12 @@
 <details>
   <summary>Tabla de contenido</summary>
   <ol>
-    <li>
-      <a href="#intalacion">Instalacion</a>
-      <ul>
-        <li><a href="#requisitos">Requisitos</a></li>
-      </ul>
-    </li>
+    <li><a href="#instalacion">Instalacion</a></li>
+    <li><a href="#requisitos">Requisitos</a></li>
     <li><a href="#Estructura">Estructura</a></li>
     <li><a href="#variables">Variables</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#configuracion">Configuracion</a></li>
+    <li><a href="#deploy">Deploy</a></li>
   </ol>
 </details>
 
